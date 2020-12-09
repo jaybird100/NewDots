@@ -27,6 +27,10 @@ public class GameThread extends Thread{
                     long stop = System.nanoTime();
                     //System.out.println("N: "+((stop-start)/1000000));
                 }
+                if(completelyRandom&&player1Turn==randP1){
+                    random();
+                    // System.out.println("R: "+((stop-start)/1000000));
+                }
                 if (Graph.getActivateRandom() && Graph.player1Turn == Graph.getRandBotPlayer1()) {
                     if(Graph.getSleep()>0) {
                         sleep(250*Graph.getSleep());
@@ -47,9 +51,10 @@ public class GameThread extends Thread{
                     if(allWaysReplay){
                         sleep(15);
                     }
-                    
-                    
+                    long start =System.nanoTime();
                     Graph.getMCTS().placeEdge();
+                    long stop = System.nanoTime();
+                    System.out.println("MCTS: "+((stop-start)/1000000));
                 }
                 
                 
@@ -71,6 +76,36 @@ public class GameThread extends Thread{
         }
         catch (Exception e){
             e.printStackTrace();
+        }
+    }
+    public static void random() {
+        ELine line = Graph.getAvailableLines().get((int)(Math.random()*availableLines.size()));
+        line.setActivated(true);
+        // make it black
+        line.setBackground(Color.BLACK);
+        line.repaint();
+        // set the adjacency matrix to 2, 2==is a line, 1==is a possible line
+        Graph.matrix[line.vertices.get(0).getID()][line.vertices.get(1).getID()] = 2;
+        Graph.matrix[line.vertices.get(1).getID()][line.vertices.get(0).getID()] = 2;
+        // gets an arrayList of each box the ELine creates. The box is an arrayList of 4 vertices.
+        ArrayList<ArrayList<Vertex>> boxes = checkBox(line);
+        if (boxes != null) {
+            for (ArrayList<Vertex> box : boxes) {
+                // looks through the counterBoxes arrayList and sets the matching one visible.
+                checkMatching(box);
+                // updates the score board
+                if (Graph.getPlayer1Turn()) {
+                    Graph.setPlayer1Score(Graph.getPlayer1Score()+1);
+                    Graph.getScore1().setScore();
+                } else {
+                    Graph.setPlayer2Score(Graph.getPlayer2Score()+1);
+                    Graph.getScore2().setScore();
+                }
+            }
+            // if every counterBox has been activated, the game is over
+        } else {
+            Graph.setNumOfMoves(0);
+            // switches turn. If randomBot is active switches to their turn.
         }
     }
     public static void placeEdgeN(int index){

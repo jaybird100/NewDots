@@ -30,11 +30,15 @@ public class Graph {
     }
 
     // turn on neural network. HAS TO BE PLAYER 1 in a 3x4 map
-    private static boolean neuralOn=true;
+    private static boolean neuralOn=false;
 
+    static boolean completelyRandom=true;
+    static boolean randP1=false;
+
+    static int gamesToPlay=500;
 
     private static int sleep = 0;
-    static boolean allWaysReplay=false;
+    static boolean allWaysReplay=true;
     // Overarching game class
 	private static RandomBot randBot = new RandomBot();
 	public  static RandomBot getRandomBot() {return randBot;}
@@ -43,7 +47,7 @@ public class Graph {
 	public  static MCTSTree getMCTS() {return MCTS;}
 	
 	private static boolean MCTSon=true;
-	private static boolean MCTSP1=false;
+	private static boolean MCTSP1=true;
 	
 	public static boolean isMCTS() {return MCTSon;}
 	
