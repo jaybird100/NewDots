@@ -296,7 +296,9 @@ public class Graph {
         if(MCTSon) {
             MCTS.initialize(matrix, 0, 0, MCTSP1, availableLines);
         }
+        System.out.println(neuralOn);
         if(neuralOn){
+            System.out.println("WTFFF");
             QBrain = DQNPolicy.load("QLearning.bin");
         }
     }
