@@ -218,7 +218,7 @@ public class QTable {
         ELine line = availableLines.get(chosen);
         line.setActivated(true);
         // make it black
-        line.setBackground(Color.BLUE);
+        line.setBackground(Color.BLACK);
         line.repaint();
         // set the adjacency matrix to 2, 2==is a line, 1==is a possible line
         Graph.matrix[line.vertices.get(0).getID()][line.vertices.get(1).getID()] = 2;

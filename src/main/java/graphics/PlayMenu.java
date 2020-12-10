@@ -86,30 +86,20 @@ public class PlayMenu implements Menu{
 			}
 			else{
 				switch (size){
-				case 1:
-					Graph.setWidth(3);
-					Graph.setHeight(3);
-					break;
-				case 2:
-					Graph.setWidth(4);
-					Graph.setHeight(4);
-					break;
-				case 3:
-					Graph.setWidth(5);
-					Graph.setHeight(5);
-					break;
+					case 1:
+						Graph.setWidth(3);
+						Graph.setHeight(3);
+						break;
+					case 2:
+						Graph.setWidth(4);
+						Graph.setHeight(4);
+						break;
+					case 3:
+						Graph.setWidth(5);
+						Graph.setHeight(5);
+						break;
 				}
 			}
-			try {
-				new GameBoard();
-			} catch (IOException ioException) {
-				ioException.printStackTrace();
-			} catch (InterruptedException interruptedException) {
-				interruptedException.printStackTrace();
-			}
-			Graph.setPlayer1Name(player1name.getText());
-			Graph.setPlayer2Name(player2name.getText());
-			Graph.setPlayerPlays(true);
 			if(botActive) {
 				Graph.setBothPlayers(false);
 				Graph.setPlayerisP1(false);
@@ -135,6 +125,7 @@ public class PlayMenu implements Menu{
 					Graph.setMiniMax(true);
 					Graph.setDeepQ(false);
 					Graph.setQTable(false);
+					Graph.setPlayerisP1(true);
 				}
 				else if(botV==4) {
 					// TODO set this to be QTable
@@ -151,7 +142,7 @@ public class PlayMenu implements Menu{
 					Graph.setDeepQ(true);
 					Graph.setQTable(false);
 				}
-				
+
 			}
 			else {
 				Graph.setActivateRandom(false);
@@ -161,6 +152,17 @@ public class PlayMenu implements Menu{
 				Graph.setPlayerisP1(true);
 
 			}
+			try {
+				new GameBoard();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			} catch (InterruptedException interruptedException) {
+				interruptedException.printStackTrace();
+			}
+			Graph.setPlayer1Name(player1name.getText());
+			Graph.setPlayer2Name(player2name.getText());
+			Graph.setPlayerPlays(true);
+
 			base.getFrame().setVisible(false);
 		}});
 	}

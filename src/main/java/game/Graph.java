@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import MCTS.MCTSTree;
 import Neural.GState;
+import QTable.QTable;
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.List;
 public class Graph {
     static boolean completelyRandom=false;
     static boolean randP1=true;
-    static int gamesToPlay=1000;
+    static int gamesToPlay=0;
     public static boolean isPlayerPlays() {
         return playerPlays;
     }
@@ -81,7 +82,9 @@ public class Graph {
 
     public static boolean getQTable() {return qTableOn;}
 
+
     public static void setQTable(boolean b) {qTableOn=b;}
+    static QTable table;
     // Overarching game class
 //	private static RandomBot randBot = new MinMaxBot();
 //	public  static RandomBot getRandomBot() {return randBot;}
@@ -103,7 +106,7 @@ public class Graph {
     public static void setMCTSP1(boolean b) {MCTSP1=b;}
 
     //Variables for MINIMAX, make sure to use these while implementing
-    private static boolean miniMaxOn=true;
+    private static boolean miniMaxOn=false;
     private static boolean miniMaxP1=false;
     public static boolean isMiniMax() {return miniMaxOn;}
 
@@ -296,10 +299,11 @@ public class Graph {
         if(MCTSon) {
             MCTS.initialize(matrix, 0, 0, MCTSP1, availableLines);
         }
-        System.out.println(neuralOn);
         if(neuralOn){
-            System.out.println("WTFFF");
             QBrain = DQNPolicy.load("QLearning.bin");
+        }
+        if(qTableOn){
+            table = new QTable();
         }
     }
     public static ArrayList<ELine> availCheck(ArrayList<ELine> av){

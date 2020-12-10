@@ -63,7 +63,9 @@ public class GameThread extends Thread{
                     long stop = System.nanoTime();
                     System.out.println("MCTS: "+((stop-start)/1000000));
                 }
-                
+                if(Graph.getQTable()&& player1Turn){
+                    table.turn();
+                }
                 
                 if (Graph.getNumOfMoves() < 1) {
                     Graph.setNumOfMoves(1);
