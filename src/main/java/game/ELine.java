@@ -4,15 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static game.GameThread.clickEdge;
 import static game.Graph.availableLines;
 
 
-public class ELine extends JLabel implements Comparable{
+public class ELine extends JLabel implements Comparable, Serializable {
     // The graphical display of the edges
 
+    private boolean calculated = false;
+
+    public ArrayList<Vertex> getVertices() {
+        return vertices;
+    }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
+    }
 
     // Whether the line has been clicked or not
 	private boolean activated = false;
@@ -22,6 +36,15 @@ public class ELine extends JLabel implements Comparable{
     public ArrayList<Vertex> vertices;
     // whether it's horizontal
     private boolean horizontal;
+
+    public ELine(boolean act,int edL,ArrayList<Vertex> v,boolean h, boolean c){
+        activated=act;
+        edgeListIndex=edL;
+        vertices=v;
+        horizontal=h;
+        calculated=c;
+    }
+
     public ELine(int w,int h,int x,int y,ArrayList<Vertex> v){
         vertices=v;
         if(vertices.get(1).getID()-vertices.get(0).getID()==1){

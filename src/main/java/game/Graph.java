@@ -1,15 +1,45 @@
 package game;
 
 
-import MCTS.MCTSTree;
-import org.deeplearning4j.rl4j.policy.DQNPolicy;
-
 import javax.swing.*;
+
+import MCTS.MCTSTree;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
+    public static boolean isPlayerPlays() {
+        return playerPlays;
+    }
+
+    public static void setPlayerPlays(boolean playerPlays) {
+        Graph.playerPlays = playerPlays;
+    }
+
+    public static boolean isPlayerisP1() {
+        return playerisP1;
+    }
+
+    public static void setPlayerisP1(boolean playerisP1) {
+        Graph.playerisP1 = playerisP1;
+    }
+
+    public static boolean isBothPlayers() {
+        return bothPlayers;
+    }
+
+    public static void setBothPlayers(boolean bothPlayers) {
+        Graph.bothPlayers = bothPlayers;
+    }
+
+    private static boolean playerPlays=true;
+    private static boolean playerisP1=true;
+
+    private static boolean bothPlayers=false;
+
+
     public static int getNumOfMoves() {
         return numOfMoves;
     }
@@ -24,55 +54,78 @@ public class Graph {
         return sleep;
     }
 
-    static DQNPolicy QBrain;
-    public static boolean isNeuralOn() {
-        return neuralOn;
-    }
-
-    // turn on neural network. HAS TO BE PLAYER 1 in a 3x4 map
+    private static int sleep = 0;
+    static boolean allWaysReplay=false;
+    //Make sure to use the variables bellow in order for everything to work with the GUI
+    //DeepQ boolean
     private static boolean neuralOn=false;
 
-    static boolean completelyRandom=true;
-    static boolean randP1=false;
+    public static boolean getDeepQ() {return neuralOn;}
 
-    static int gamesToPlay=500;
+    public static void setDeepQ(boolean b) {neuralOn=b;}
+    //QTable boolean
+    private static boolean qTableOn=false;
 
-    private static int sleep = 0;
-    static boolean allWaysReplay=true;
+    public static boolean isqPlayer1() {
+        return qPlayer1;
+    }
+
+    private static boolean qPlayer1=true;
+
+    public static boolean getQTable() {return qTableOn;}
+
+    public static void setQTable(boolean b) {qTableOn=b;}
     // Overarching game class
-	private static RandomBot randBot = new RandomBot();
-	public  static RandomBot getRandomBot() {return randBot;}
-	
-	private static MCTSTree MCTS= new MCTSTree();
-	public  static MCTSTree getMCTS() {return MCTS;}
-	
-	private static boolean MCTSon=true;
-	private static boolean MCTSP1=true;
-	
-	public static boolean isMCTS() {return MCTSon;}
-	
-	public static boolean isMCTSP1() {return MCTSP1;}
-	
-	
+//	private static RandomBot randBot = new MinMaxBot();
+//	public  static RandomBot getRandomBot() {return randBot;}
+    private static RandomBot randBot = new RandomBot();
+    public  static RandomBot getRandomBot() {return randBot;}
+
+    private static MCTSTree MCTS= new MCTSTree();
+    public  static MCTSTree getMCTS() {return MCTS;}
+
+    private static boolean MCTSon=false;
+    private static boolean MCTSP1=false;
+
+    public static boolean isMCTS() {return MCTSon;}
+
+    public static boolean isMCTSP1() {return MCTSP1;}
+
+    public static void setMCTS(boolean b) {MCTSon=b;}
+
+    public static void setMCTSP1(boolean b) {MCTSP1=b;}
+
+    //Variables for MINIMAX, make sure to use these while implementing
+    private static boolean miniMaxOn=true;
+    private static boolean miniMaxP1=false;
+    public static boolean isMiniMax() {return miniMaxOn;}
+
+    public static boolean isMiniMaxP1() {return miniMaxP1;}
+
+    public static void setMiniMax(boolean b) {miniMaxOn=b;}
+
+    public static void setMiniMaxP1(boolean b) {miniMaxP1=b;}
+
+
     // chooses whether randBot will be player 1 or 2
-	private static boolean randBotPlayer1 = false;
-	public  static boolean getRandBotPlayer1() {return randBotPlayer1;}
-	// chooses whether randBot is active
-	private static boolean activateRandom=false;
+    private static boolean randBotPlayer1 = false;
+    public  static boolean getRandBotPlayer1() {return randBotPlayer1;}
+    // chooses whether randBot is active
+    private static boolean activateRandom=false;
     public static void setActivateRandom(boolean activateRandom) { Graph.activateRandom = activateRandom; }
     public  static boolean getActivateRandom() {return activateRandom;}
-	// Adjacency matrix
+    // Adjacency matrix
     public static int[][] matrix;
-	public  static int[][] getMatrix(){return matrix;}
+    public  static int[][] getMatrix(){return matrix;}
     // List of dots
     private static List<Vertex> vertexList;
-	public  static List<Vertex> getVertexList(){return vertexList;}
+    public  static List<Vertex> getVertexList(){return vertexList;}
     // List of edges
     private static List<Edge> edgeList;
-	public  static List<Edge> getEdgeList(){return edgeList;}
+    public  static List<Edge> getEdgeList(){return edgeList;}
     // List of lines (edges) that haven't been activated yet
     public static ArrayList<ELine> availableLines;
-	public  static ArrayList<ELine> getAvailableLines(){return availableLines;}
+    public  static ArrayList<ELine> getAvailableLines(){return availableLines;}
     // Height and width of the dots
     private static int height;
     private static int width;
@@ -85,7 +138,7 @@ public class Graph {
     private static int gamesWon2=0;
     public  static int getGamesWon1(){return gamesWon1;}
     public  static int getGamesWon2(){return gamesWon2;}
-    
+
     public  static void setGamesWon1(int x){gamesWon1=x;}
     public  static void setGamesWon2(int x){gamesWon2=x;}
     // The JLabels for displaying the score
@@ -96,26 +149,26 @@ public class Graph {
     // tracking whether it's player 1's turn or not
     public static boolean player1Turn;
     public  static boolean getPlayer1Turn() {
-    	return player1Turn;
+        return player1Turn;
     }
-    
+
     public static void setPlayer1Turn(boolean b) {player1Turn =b;}
     // tracking the score in a game
     public static int player1Score = 0;
     public static int player2Score = 0;
     public  static int getPlayer1Score(){return player1Score;}
     public  static int getPlayer2Score(){return player2Score;}
-    
+
     public  static void setPlayer1Score(int s){player1Score=s;}
     public  static void setPlayer2Score(int s){player2Score=s;}
     // All of the boxes, so if a box is completed this displays, can be either initials or the score counter
     private static ArrayList<ScoreBox> counterBoxes;
     public  static ArrayList<ScoreBox> getCounterBoxes(){return counterBoxes;}
-    
+
     // Game over screen
     private static GameOver screen;
     public  static GameOver getScreen(){return screen;}
-    
+
     // initials or score counter in ScoreBox
     private static String player1Name = "Gerald";
     public static void setPlayer1Name(String s){
@@ -129,13 +182,13 @@ public class Graph {
     public static void setInitials(boolean s){
         initials=s;
     }
-    
+
     public  static String getPlayer1Name(){return player1Name;}
     public  static String getPlayer2Name(){return player2Name;}
     public  static boolean getInitials(){return initials;}
-    
+
     private JFrame frame;
-    
+
     public Graph(int h, int w, JFrame screen){
         height=h;
         width=w;
@@ -217,7 +270,7 @@ public class Graph {
                 }
             }
         }
-    //    System.out.println(edgeList.size());
+        //    System.out.println(edgeList.size());
         // creates each available box and adds it to the counterBoxes list. This is for displaying what pops up when you complete a box
         for(int r=0;r<height;r++){
             for(int c=0;c<width;c++){
@@ -232,21 +285,18 @@ public class Graph {
                 counter++;
             }
         }
-        
+
         if(MCTSon) {
-        	MCTS.initialize(matrix, 0, 0, MCTSP1, availableLines);
-        }
-        if(neuralOn) {
-            QBrain = DQNPolicy.load("QLearning.bin");
+            MCTS.initialize(matrix, 0, 0, MCTSP1, availableLines);
         }
     }
     public static ArrayList<ELine> availCheck(ArrayList<ELine> av){
-      //  System.out.println("AV CHECK:");
+        //  System.out.println("AV CHECK:");
         boolean stop=false;
         for(int q=av.size()-1;q>=0;q--){
             if(av.get(q).isActivated()&&!stop){
                 stop=true;
-              //  System.out.println("REMOVE: "+av.get(q).vertices.get(0).id+" -- "+av.get(q).vertices.get(1).id);
+                //  System.out.println("REMOVE: "+av.get(q).vertices.get(0).id+" -- "+av.get(q).vertices.get(1).id);
                 av.remove(q);
             }
         }
@@ -273,23 +323,23 @@ public class Graph {
                 horizontal=false;
             }
         }
-        
+
         public ArrayList<Vertex> getVertices(){
-        	return this.vertices;
+            return this.vertices;
         }
-        
+
         public ELine getEline() {
-        	return this.line;
+            return this.line;
         }
-        
+
         public void setVertices(ArrayList<Vertex> v){
-        	this.vertices=v;
+            this.vertices=v;
         }
-        
+
         public void setEline(ELine l) {
-        	this.line=l;
+            this.line=l;
         }
-        
+
         // Creates the ELine
         public void createLine(){
             if(horizontal){

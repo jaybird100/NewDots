@@ -17,7 +17,7 @@ public class PlayMenu implements Menu{
 	private static Menu instance=null;
 	//Components of the Panel
 	private JPanel playMenuPanel;
-	private JButton back,play,human,bot,size1,size2,size3,custom;
+	private JButton back,play,human,bot,size1,size2,size3,custom, bMCTS, bBASE, miniMax, QTable, DeepQ;
 	private JTextField player1name, player2name;
 	private JFormattedTextField boardW, boardH;
 	private JCheckBox initials;
@@ -25,9 +25,11 @@ public class PlayMenu implements Menu{
 	private MenuBasic base;
 	//Game Settings
 	private boolean botActive=false;
+	private boolean MCTS=false;
 	private boolean showInitials=false;
 	private boolean customSize=false;
 	private int size=1;
+	private int botV=1;
 
 
 	private PlayMenu() {
@@ -44,6 +46,8 @@ public class PlayMenu implements Menu{
 		setUpPlay();
 		setUpPlayer();
 		setUpBoard();
+		setUpBots();
+		
 		add(play);
 		add(human);
 		add(bot);
@@ -56,6 +60,12 @@ public class PlayMenu implements Menu{
 		add(boardW);
 		add(boardH);
 		add(initials);
+		
+		add(bBASE);
+		add(bMCTS);
+		add(miniMax);
+		add(QTable);
+		add(DeepQ);
 	}
 	@Override
 	public JPanel getPanel() {
@@ -99,7 +109,58 @@ public class PlayMenu implements Menu{
 			}
 			Graph.setPlayer1Name(player1name.getText());
 			Graph.setPlayer2Name(player2name.getText());
-			Graph.setActivateRandom(botActive);
+			Graph.setPlayerPlays(true);
+			if(botActive) {
+				Graph.setBothPlayers(false);
+				Graph.setPlayerisP1(false);
+				if(botV==2) {
+					Graph.setMCTS(true);
+					Graph.setActivateRandom(false);
+					Graph.setMiniMax(false);
+					Graph.setDeepQ(false);
+					Graph.setQTable(false);
+					Graph.setPlayerisP1(true);
+				}
+				else if(botV==1) {
+					Graph.setActivateRandom(true);
+					Graph.setMCTS(false);
+					Graph.setMiniMax(false);
+					Graph.setDeepQ(false);
+					Graph.setQTable(false);
+					Graph.setPlayerisP1(true);
+				}
+				else if(botV==3) {
+					Graph.setActivateRandom(false);
+					Graph.setMCTS(false);
+					Graph.setMiniMax(true);
+					Graph.setDeepQ(false);
+					Graph.setQTable(false);
+				}
+				else if(botV==4) {
+					// TODO set this to be QTable
+					Graph.setActivateRandom(false);
+					Graph.setMCTS(false);
+					Graph.setMiniMax(false);
+					Graph.setDeepQ(false);
+					Graph.setQTable(true);
+				}
+				else if(botV==5) {
+					Graph.setActivateRandom(false);
+					Graph.setMCTS(false);
+					Graph.setMiniMax(false);
+					Graph.setDeepQ(true);
+					Graph.setQTable(false);
+				}
+				
+			}
+			else {
+				Graph.setActivateRandom(false);
+				Graph.setMCTS(false);
+				Graph.setMiniMax(false);
+				Graph.setBothPlayers(true);
+				Graph.setPlayerisP1(true);
+
+			}
 			base.getFrame().setVisible(false);
 		}});
 	}
@@ -115,7 +176,10 @@ public class PlayMenu implements Menu{
 			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
 			setIcon(human, Paths.BUTTON_HUMAN);
 			player2name.setEditable(false);
-			player2name.setText("RandomBot");
+			player2name.setText("BaseBot");
+			
+			setIcon(bBASE, Paths.BUTTON_BASE_SELECTED);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
 		}});
 		human.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
 			botActive=false;
@@ -123,6 +187,9 @@ public class PlayMenu implements Menu{
 			setIcon(human, Paths.BUTTON_HUMAN_SELECTED);
 			player2name.setEditable(true);
 			player2name.setText("Player 2");
+			
+			setIcon(bBASE, Paths.BUTTON_BASE);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
 		}});
 		
 		player1name=new JTextField("Player 1");
@@ -141,6 +208,130 @@ public class PlayMenu implements Menu{
 		initials.addItemListener(new ItemListener() {public void itemStateChanged(ItemEvent e) {showInitials=!showInitials;
 		Graph.setInitials(showInitials);}});
 	}
+	
+	private void setUpBots() {
+		bMCTS=Button(Paths.BUTTON_MCTS);
+		bBASE=Button(Paths.BUTTON_BASE);
+		miniMax=Button(Paths.BUTTON_MIN);
+		DeepQ=Button(Paths.BUTTON_DEEPQ);
+		QTable=Button(Paths.BUTTON_QTABLE);
+		
+		bBASE.setLocation(323,445);
+		bMCTS.setLocation(164,445);
+		miniMax.setLocation(475,445);
+		
+		QTable.setLocation(323,495);
+		DeepQ.setLocation(164,495);
+		
+		bBASE.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+			setIcon(bBASE, Paths.BUTTON_BASE_SELECTED);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
+			setIcon(miniMax, Paths.BUTTON_MIN);
+			setIcon(QTable, Paths.BUTTON_QTABLE);
+			setIcon(DeepQ, Paths.BUTTON_DEEPQ);
+			
+			botActive=true;
+			botV=1;
+			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+			setIcon(human, Paths.BUTTON_HUMAN);
+			player2name.setEditable(false);
+			player2name.setText("BaseBot");
+			
+			player1name.setEditable(true);
+			player1name.setText("Player1");
+			
+			setActiveSize(1);
+		}});
+		bMCTS.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+			setIcon(bBASE, Paths.BUTTON_BASE);
+			setIcon(bMCTS, Paths.BUTTON_MCTS_SELECTED);
+			setIcon(QTable, Paths.BUTTON_QTABLE);
+			setIcon(DeepQ, Paths.BUTTON_DEEPQ);
+			
+			botActive=true;
+			botV=2;
+			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+			setIcon(human, Paths.BUTTON_HUMAN);
+			setIcon(miniMax, Paths.BUTTON_MIN);
+			player2name.setEditable(false);
+			player2name.setText("MCTS");
+			
+			player1name.setEditable(true);
+			player1name.setText("Player1");
+			
+			setActiveSize(1);
+		}});
+		miniMax.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+			setIcon(bBASE, Paths.BUTTON_BASE);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
+			setIcon(QTable, Paths.BUTTON_QTABLE);
+			setIcon(DeepQ, Paths.BUTTON_DEEPQ);
+			
+			botActive=true;
+			botV=3;
+			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+			setIcon(human, Paths.BUTTON_HUMAN);
+			setIcon(miniMax, Paths.BUTTON_MIN_SELECTED);
+			player2name.setEditable(false);
+			player2name.setText("MiniMax");
+			
+			player1name.setEditable(true);
+			player1name.setText("Player1");
+			
+			setActiveSize(1);
+		}});
+		QTable.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+			setIcon(bBASE, Paths.BUTTON_BASE);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
+			setIcon(miniMax, Paths.BUTTON_MIN);
+			setIcon(QTable, Paths.BUTTON_QTABLE_SELECTED);
+			setIcon(DeepQ, Paths.BUTTON_DEEPQ);
+			
+			botActive=true;
+			botV=4;
+			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+			setIcon(human, Paths.BUTTON_HUMAN);
+			player1name.setEditable(false);
+			player1name.setText("QTable");
+			
+			player2name.setEditable(true);
+			player2name.setText("Player2");
+			
+			setActiveSize(4);
+			
+			boardW.setValue(3);
+			boardH.setValue(3);
+			
+			boardW.setEditable(false);
+			boardH.setEditable(false);
+		}});
+		DeepQ.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+			setIcon(bBASE, Paths.BUTTON_BASE);
+			setIcon(bMCTS, Paths.BUTTON_MCTS);
+			setIcon(miniMax, Paths.BUTTON_MIN);
+			setIcon(QTable, Paths.BUTTON_QTABLE);
+			setIcon(DeepQ, Paths.BUTTON_DEEPQ_SELECTED);
+			
+			botActive=true;
+			botV=5;
+			setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+			setIcon(human, Paths.BUTTON_HUMAN);
+			player1name.setEditable(false);
+			player1name.setText("DeepQ");
+			
+			player2name.setEditable(true);
+			player2name.setText("Player2");
+			
+			setActiveSize(4);
+			
+			boardW.setValue(3);
+			boardH.setValue(4);
+			
+			boardW.setEditable(false);
+			boardH.setEditable(false);
+		}});
+	}
+	
 //Sets up the board options
 	private void setUpBoard(){
 		size1=Button(Paths.BUTTON_SIZE1_SELECTED);
@@ -197,7 +388,24 @@ public class PlayMenu implements Menu{
 			setIcon(size3, Paths.BUTTON_SIZE3);
 			break;
 		case 4:
-			setIcon(custom, Paths.BUTTON_CUSTOM);
+			if(botV==4 || botV==5) {
+				setIcon(custom, Paths.BUTTON_CUSTOM);
+				setIcon(bBASE, Paths.BUTTON_BASE);
+				setIcon(bMCTS, Paths.BUTTON_MCTS_SELECTED);
+				setIcon(QTable, Paths.BUTTON_QTABLE);
+				setIcon(DeepQ, Paths.BUTTON_DEEPQ);
+			
+				botActive=true;
+				botV=2;
+				setIcon(bot, Paths.BUTTON_BOT_SELECTED);
+				setIcon(human, Paths.BUTTON_HUMAN);
+				setIcon(miniMax, Paths.BUTTON_MIN);
+				player2name.setEditable(false);
+				player2name.setText("MCTS");
+				
+				player1name.setEditable(true);
+				player1name.setText("Player1");
+			}
 			break;
 		}
 		

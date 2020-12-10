@@ -25,7 +25,7 @@ public class GameThread extends Thread{
                     GState state = new GState(matrix,player1Score,player2Score,Graph.getNumOfMoves(),availableLines,player1Turn,getCounterBoxes(),getEdgeList());
                     placeEdgeN(QBrain.nextAction(Nd4j.expandDims(Nd4j.create(state.toArray()), 0)));
                     long stop = System.nanoTime();
-                    //System.out.println("N: "+((stop-start)/1000000));
+                    System.out.println("N: "+((stop-start)/1000000));
                 }
                 if(completelyRandom&&player1Turn==randP1){
                     random();
@@ -42,6 +42,13 @@ public class GameThread extends Thread{
                     
                     Graph.getRandomBot().placeRandomEdge();
 //                    Graph.getMCTS().placeEdge();
+                }
+
+                if(Graph.isMiniMax()&&Graph.isMiniMaxP1()== player1Turn){
+                    long start =System.nanoTime();
+                    MinMaxBot.placeEdge();
+                    long stop = System.nanoTime();
+                    System.out.println("MM: "+((stop-start)/1000000));
                 }
                 
                 if (Graph.isMCTS()&& Graph.player1Turn == Graph.isMCTSP1()) {

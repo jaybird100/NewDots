@@ -15,7 +15,7 @@ public class MCTSTree {
     private MCTSNode root;
     private ArrayList<MCTSNode> treeNodes = new ArrayList<MCTSNode>();
     
-    private int runs=1000000;
+    private int runs=10000000;
 
     /***Constructor method that creates a tree from the first turn of a bot.
      * 
