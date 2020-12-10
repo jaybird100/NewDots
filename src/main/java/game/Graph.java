@@ -4,12 +4,17 @@ package game;
 import javax.swing.*;
 
 import MCTS.MCTSTree;
+import Neural.GState;
+import org.deeplearning4j.rl4j.policy.DQNPolicy;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
+    static boolean completelyRandom=false;
+    static boolean randP1=true;
+    static int gamesToPlay=1000;
     public static boolean isPlayerPlays() {
         return playerPlays;
     }
@@ -59,6 +64,8 @@ public class Graph {
     //Make sure to use the variables bellow in order for everything to work with the GUI
     //DeepQ boolean
     private static boolean neuralOn=false;
+
+    static DQNPolicy<GState> QBrain;
 
     public static boolean getDeepQ() {return neuralOn;}
 
@@ -288,6 +295,9 @@ public class Graph {
 
         if(MCTSon) {
             MCTS.initialize(matrix, 0, 0, MCTSP1, availableLines);
+        }
+        if(neuralOn){
+            QBrain = DQNPolicy.load("QLearning.bin");
         }
     }
     public static ArrayList<ELine> availCheck(ArrayList<ELine> av){

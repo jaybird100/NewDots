@@ -20,14 +20,14 @@ public class GameThread extends Thread{
                     sleep(500*Graph.getSleep());
                 }
                 availableLines=availCheck(Graph.getAvailableLines());
-                if(Graph.isNeuralOn()&&player1Turn){
+                if(Graph.getDeepQ()&&player1Turn){
                     long start =System.nanoTime();
                     GState state = new GState(matrix,player1Score,player2Score,Graph.getNumOfMoves(),availableLines,player1Turn,getCounterBoxes(),getEdgeList());
                     placeEdgeN(QBrain.nextAction(Nd4j.expandDims(Nd4j.create(state.toArray()), 0)));
                     long stop = System.nanoTime();
                     System.out.println("N: "+((stop-start)/1000000));
                 }
-                if(completelyRandom&&player1Turn==randP1){
+                if(Graph.completelyRandom&&player1Turn==randP1){
                     random();
                     // System.out.println("R: "+((stop-start)/1000000));
                 }
