@@ -156,8 +156,6 @@ public class PlayMenu implements Menu{
 				new GameBoard();
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
-			} catch (InterruptedException interruptedException) {
-				interruptedException.printStackTrace();
 			}
 			Graph.setPlayer1Name(player1name.getText());
 			Graph.setPlayer2Name(player2name.getText());

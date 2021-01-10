@@ -6,6 +6,7 @@ import javax.swing.*;
 import MCTS.MCTSTree;
 import Neural.GState;
 import QTable.QTable;
+import minMax.MinMax;
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
 
 import java.io.IOException;
@@ -13,9 +14,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
+    public static boolean fin=false;
+
+    public static boolean GASim=false;
+
+    public static void setSims(int sims) {
+        Graph.sims = sims;
+    }
+
+    public static int sims;
+
+
+
+    static boolean bothMinMax=false;
+    public static int minMaxDepth = 5;
+
+    static MinMax t = new MinMax();
+
     static boolean completelyRandom=false;
-    static boolean randP1=true;
-    static int gamesToPlay=0;
+    static boolean randP1=false;
+
+
+    public static void setMinMaxDepth(int minMaxDepth) {
+        Graph.minMaxDepth = minMaxDepth;
+    }
+
+    public static void setT(MinMax t) {
+        Graph.t = t;
+    }
+
+    public static void setGamesToPlay(int gamesToPlay) {
+        Graph.gamesToPlay = gamesToPlay;
+    }
+
+    static int gamesToPlay=200;
     public static boolean isPlayerPlays() {
         return playerPlays;
     }
@@ -61,7 +93,20 @@ public class Graph {
     }
 
     private static int sleep = 0;
-    static boolean allWaysReplay=false;
+
+    public static void setAllWaysReplay(boolean allWaysReplay) {
+        Graph.allWaysReplay = allWaysReplay;
+    }
+
+    public static void setMiniMaxOn(boolean miniMaxOn) {
+        Graph.miniMaxOn = miniMaxOn;
+    }
+
+    public static void setRandBotPlayer1(boolean randBotPlayer1) {
+        Graph.randBotPlayer1 = randBotPlayer1;
+    }
+
+    static boolean allWaysReplay=true;
     //Make sure to use the variables bellow in order for everything to work with the GUI
     //DeepQ boolean
     private static boolean neuralOn=false;
@@ -106,7 +151,7 @@ public class Graph {
     public static void setMCTSP1(boolean b) {MCTSP1=b;}
 
     //Variables for MINIMAX, make sure to use these while implementing
-    private static boolean miniMaxOn=false;
+    private static boolean miniMaxOn=true;
     private static boolean miniMaxP1=false;
     public static boolean isMiniMax() {return miniMaxOn;}
 
@@ -118,10 +163,10 @@ public class Graph {
 
 
     // chooses whether randBot will be player 1 or 2
-    private static boolean randBotPlayer1 = false;
+    private static boolean randBotPlayer1 = true;
     public  static boolean getRandBotPlayer1() {return randBotPlayer1;}
     // chooses whether randBot is active
-    private static boolean activateRandom=false;
+    private static boolean activateRandom=true;
     public static void setActivateRandom(boolean activateRandom) { Graph.activateRandom = activateRandom; }
     public  static boolean getActivateRandom() {return activateRandom;}
     // Adjacency matrix

@@ -2,6 +2,7 @@ package game;
 
 
 import graphics.Paths;
+import minMax.MinMax;
 
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
@@ -14,7 +15,7 @@ public class GameBoard{
     private static Graph graph;
     // paintBoard is the JPanel for the edges, score counter and score boxes
     private PaintBoard panel;
-    public GameBoard() throws IOException, InterruptedException {
+    public GameBoard() throws IOException{
         if(!Graph.allWaysReplay) {
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,7 +37,7 @@ public class GameBoard{
         GameThread thread = new GameThread();
         thread.start();
     }
-    public GameBoard(int h, int w) throws IOException, InterruptedException {
+    public GameBoard(int h, int w) throws IOException {
         if(!Graph.allWaysReplay) {
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +59,18 @@ public class GameBoard{
         GameThread thread = new GameThread();
         thread.start();
     }
-
+    public GameBoard(int h, int w, MinMax t, int simulations, int depth, boolean first) throws IOException {
+        graph = new Graph(h, w, frame);
+        Graph.setSims(simulations);
+        Graph.setMinMaxDepth(depth);
+        Graph.setT(t);
+        Graph.setMiniMaxP1(first);
+        Graph.setRandBotPlayer1(!first);
+        Graph.GASim =true;
+        graph.createGraph();
+        GameThread thread = new GameThread();
+        thread.start();
+    }
 
 
 }

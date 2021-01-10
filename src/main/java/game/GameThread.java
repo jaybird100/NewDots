@@ -1,6 +1,8 @@
 package game;
 
 import Neural.GState;
+import minMax.Node;
+import minMax.MinMax;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.awt.*;
@@ -10,9 +12,12 @@ import java.util.ArrayList;
 import static game.Graph.*;
 
 public class GameThread extends Thread{
+    int minMaxCounter=1;
     public void run(){
         try{
             while(!checkFinished()) {
+                Node te = new Node(Node.matrixCopy(Graph.getMatrix()),0,0,null,false,false,false,null);
+               // System.out.println("Number of chains: "+te.numberOfLongChains());
                 if(allWaysReplay){
                     sleep(30);
                 }
@@ -43,12 +48,41 @@ public class GameThread extends Thread{
                     Graph.getRandomBot().placeRandomEdge();
 //                    Graph.getMCTS().placeEdge();
                 }
-
-                if(Graph.isMiniMax()&&Graph.isMiniMaxP1()== player1Turn){
+                if(bothMinMax){
                     long start =System.nanoTime();
-                    MinMaxBot.placeEdge();
+                    Node state;
+                    if(player1Turn){
+                        state = new Node(Node.matrixCopy(Graph.getMatrix()), Graph.getPlayer1Score(), Graph.getPlayer2Score(), Node.avCopy(Graph.getAvailableLines()), true, false, false, null);
+                    }else{
+                        state = new Node(Node.matrixCopy(Graph.getMatrix()), Graph.getPlayer2Score(), Graph.getPlayer1Score(), Node.avCopy(Graph.getAvailableLines()), true, false, false, null);
+                    }
+                    placeEdge(t.alphaBeta(state, minMaxDepth, -1000000, 1000000, true).move);
                     long stop = System.nanoTime();
                     System.out.println("MM: "+((stop-start)/1000000));
+                }
+                if(Graph.isMiniMax()&&Graph.isMiniMaxP1()== player1Turn){
+                    if(minMaxCounter==1){
+                        minMaxCounter++;
+                    }else{
+                        minMaxCounter+=2;
+                    }
+                    long start =System.nanoTime();
+                    Node state;
+                    if(Graph.isMiniMaxP1()) {
+                        state = new Node(Node.matrixCopy(Graph.getMatrix()), Graph.getPlayer1Score(), Graph.getPlayer2Score(), Node.avCopy(Graph.getAvailableLines()), true, false, false, null);
+                    }else{
+                        state = new Node(Node.matrixCopy(Graph.getMatrix()), Graph.getPlayer2Score(), Graph.getPlayer1Score(), Node.avCopy(Graph.getAvailableLines()), true, false, false, null);
+                    }
+                   // placeEdge(t.minMaxFunction(state,3,true).move);
+                    if(minMaxCounter<(Graph.getEdgeList().size()/5)||minMaxCounter<minMaxDepth){
+                        //System.out.println("COUNTER: "+minMaxCounter);
+                        placeEdge(t.alphaBeta(state, minMaxCounter, -1000000, 1000000, true).move);
+                    }else{
+                        placeEdge(t.alphaBeta(state, minMaxDepth, -1000000, 1000000, true).move);
+                    }
+                    MinMax.counter =0;
+                    long stop = System.nanoTime();
+                    //System.out.println("MM: "+((stop-start)/1000000));
                 }
                 
                 if (Graph.isMCTS()&& Graph.player1Turn == Graph.isMCTSP1()) {
@@ -64,7 +98,10 @@ public class GameThread extends Thread{
                     System.out.println("MCTS: "+((stop-start)/1000000));
                 }
                 if(Graph.getQTable()&& player1Turn){
+                    long start =System.nanoTime();
                     table.turn();
+                    long stop = System.nanoTime();
+                    System.out.println("QT: "+((stop-start)/1000000));
                 }
                 
                 if (Graph.getNumOfMoves() < 1) {
@@ -162,7 +199,11 @@ public class GameThread extends Thread{
     public static void placeEdge(ELine line) throws InterruptedException {
         line.setActivated(true);
         // make it black
-        line.setBackground(Color.BLACK);
+        if(player1Turn) {
+            line.setBackground(Color.RED);
+        }else{
+            line.setBackground(Color.BLUE);
+        }
         line.repaint();
         // set the adjacency matrix to 2, 2==is a line, 1==is a possible line
         Graph.matrix[line.vertices.get(0).getID()][line.vertices.get(1).getID()] = 2;

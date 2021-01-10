@@ -152,7 +152,7 @@ public class QTable {
         //    System.out.println("check action2: "+illegalMove);
         }
         performAction();
-        updateQ();
+        //updateQ();
        // System.out.println("turn end");
     }
     public void setStateID(){

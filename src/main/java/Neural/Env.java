@@ -35,10 +35,8 @@ public class Env implements MDP<GState, Integer, DiscreteSpace> {
             GameBoard r = new GameBoard(Neural.boardHeight, Neural.boardWidth);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-     //   System.out.println("RESET");
+        //   System.out.println("RESET");
         GState =new GState(Graph.getMatrix(),0,0,1,Graph.getAvailableLines(),true,Graph.getCounterBoxes(),Graph.getEdgeList());
         return GState;
     }
