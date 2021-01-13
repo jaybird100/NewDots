@@ -25,7 +25,7 @@ public class Graph {
 
 
     static boolean bothMinMax=false;
-    public static int minMaxDepth = 4;
+    public static int minMaxDepth = 5;
     public static int actualMinMaxDepth=minMaxDepth;
 
     static MinMax t = new MinMax();

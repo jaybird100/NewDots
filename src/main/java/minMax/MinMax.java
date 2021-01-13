@@ -30,10 +30,10 @@ public class MinMax {
     }
     // mutlipliers
     public static double a=1;
-    public static double b=0;
-    public static double c=0;
-    public static double d=0;
-    public static double e=0;
+    public static double b=0.05;
+    public static double c=-0.25;
+    public static double d=0.5;
+    public static double e=1;
 
 
     boolean print=false;

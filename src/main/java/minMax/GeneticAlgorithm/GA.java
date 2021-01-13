@@ -5,12 +5,13 @@ import minMax.MinMax;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GA {
     static int iterations = 10;
 
     public static void main(String[] args) throws IOException {
-        GA temp = new GA(1,0,0,0,0);
+        GA temp = new GA(1,0.05,-0.25,0.5,1);
         temp.createBots();
     }
     public static int  number=10;
@@ -71,6 +72,7 @@ public class GA {
             }
         }else{
             if(counter<topValues.size()){
+                System.out.println(counter+" | "+ Arrays.toString(topValues.get(counter)));
                 tempA=topValues.get(counter)[0];
                 tempB=topValues.get(counter)[1];
                 tempC=topValues.get(counter)[2];
@@ -245,7 +247,7 @@ public class GA {
                 e=value[4];
                 topValues=new ArrayList<>();
                 for(double[] a : values){
-                    if(a[3]>(max-2.5)){
+                    if(a[5]>(max-2.5)){
                         double[] val = new double[5];
                         val[0]=a[0];
                         val[1]=a[1];
@@ -259,11 +261,11 @@ public class GA {
                     System.out.println("WHY");
                     System.out.println("max: "+max);
                     double[] val = new double[5];
-                    val[0]=0;
+                    val[0]=1;
                     val[1]=0;
                     val[2]=0;
                     val[3]=0;
-                    val[4]=1;
+                    val[4]=0;
                     topValues.add(val);
                 }
                 number=10;
