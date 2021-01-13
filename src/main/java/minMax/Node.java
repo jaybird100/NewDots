@@ -101,7 +101,9 @@ public class Node{
         }
 
         double c;
-        if(doubleCross()&&checkFor3s().size()==0&&isLongerChainAvailable()){
+        ArrayList<ELine> checksFor3s = checkFor3s();
+        int checkFor3sSize = checksFor3s.size();
+        if(doubleCross()&&checkFor3sSize==0&&isLongerChainAvailable()){
             c=1;
         }else{
             c=0;
@@ -896,8 +898,8 @@ public class Node{
 
 
 
-    public ArrayList<Integer> checkFor3s(){
-        ArrayList<Integer> av = new ArrayList<>();
+    public ArrayList<ELine> checkFor3s(){
+        ArrayList<ELine> av = new ArrayList<>();
         // goes through each availableLine
         for(int q=0;q<availLines.size();q++){
             ELine edge = availLines.get(q);
@@ -930,7 +932,7 @@ public class Node{
             }
             if(noBox){
                 // if the line doesn't create a box it adds the index from availableLines to a new arrayList, av
-                av.add(q);
+                av.add(edge);
             }
         }
         //returns list of edges that don't set up a box

@@ -5,6 +5,7 @@ import game.Graph;
 import game.ScoreBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static game.Graph.actualMinMaxDepth;
 
@@ -326,9 +327,11 @@ public class MinMax {
         ArrayList<ELine> av = Node.avCopy(state.availLines);
         for(int i=0;i<completesABox.size();i++){
             int r = completesABox.get(i);
-            ELine temp = av.get(r);
-            av.remove(r);
-            av.add(0,temp);
+            if(r!=-1) {
+                ELine temp = av.get(r);
+                av.remove(r);
+                av.add(0, temp);
+            }
         }
         ArrayList<Integer> setsUpBox = checkFor3s(state,av);
         for(int i =0;i<setsUpBox.size();i++){
@@ -423,6 +426,7 @@ public class MinMax {
         }
 
          */
+        System.out.println("FIND MATCH: "+a+" -- "+b+"  | "+ Arrays.deepToString(state.availLines.toArray()));
         return -1;
     }
 
