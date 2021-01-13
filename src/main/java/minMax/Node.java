@@ -52,7 +52,9 @@ public class Node{
         if(bonusTurn){
             toReturn+= " BONUS TURN";
         }
-        toReturn+=" Score: "+evaluation();
+        if(move!=null) {
+            toReturn += " Score: " + evaluation();
+        }
 
         return toReturn;
     }
