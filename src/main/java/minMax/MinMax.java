@@ -36,7 +36,7 @@ public class MinMax {
     public static double e=1;
 
 
-    boolean print=true;
+    boolean print=false;
     public static int counter=0;
 
     public Node alphaBeta(Node node, int depth, double a, double b, boolean bot){
