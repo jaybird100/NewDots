@@ -65,7 +65,10 @@ public class GameBoard{
         Graph.setMinMaxDepth(depth);
         Graph.setT(t);
         Graph.setMiniMaxP1(first);
+        Graph.setMiniMax(true);
         Graph.setRandBotPlayer1(!first);
+        Graph.setActivateRandom(true);
+        Graph.setAllWaysReplay(true);
         Graph.GASim =true;
         graph.createGraph();
         GameThread thread = new GameThread();

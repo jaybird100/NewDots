@@ -6,86 +6,11 @@ import game.ScoreBox;
 
 import java.util.ArrayList;
 
-import static game.Graph.getAvailableLines;
+import static game.Graph.actualMinMaxDepth;
+
 
 public class MinMax {
     public ArrayList<Node> tree = new ArrayList<Node>();
-
-    /*
-    public void generateTree(Node root, int depth){
-        if(depth==0){
-        }else{
-            for(ELine a:root.availLines){
-                Node temp = root.performMove(a);
-                generateTree(temp,depth-1);
-                root.addChild(temp);
-            }
-            tree.add(root);
-        }
-    }
-    public Node alphaBeta(Node node, int depth, double a, double b, boolean bot){
-        counter++;
-        int t=counter;
-        if(print) {
-            System.out.println(t + "| " + node.toString());
-        }
-        if(depth==0|| node.terminal){
-            return node;
-        }
-        Node toReturn=null;
-        if(bot){
-            a = -1000000;
-            String maxS = "MAX "+t+": ";
-            Node temp=null;
-            for(Node tem:node.children){
-                double toCompare = alphaBeta(tem,depth-1,a,b,tem.botTurn).evaluation();
-                maxS+= tem.move.toString()+": "+toCompare+", ";
-                if(a<toCompare){
-                    a=toCompare;
-                    temp = tem;
-                }
-                toReturn=temp;
-                a = Math.max(a,toCompare);
-                if(a>=b){
-                    System.out.println(a+">="+b+" BREAK");
-                    break;
-                }
-            }
-            maxS+= "== "+a;
-            if(print) {
-                System.out.println(maxS);
-            }
-        }else{
-            b = 1000000;
-            String minS = "Min "+t+": ";
-            Node temp=null;
-            for(Node tem:node.children){
-                double toCompare =  alphaBeta(tem,depth-1,a,b,tem.botTurn).evaluation();
-                if(b>toCompare){
-                    b=toCompare;
-                    temp = tem;
-                }
-                minS+= tem.move.toString()+": "+toCompare+", ";
-                b = Math.min(b,toCompare);
-                if(b<=a){
-                    System.out.println(b+"<="+a+" BREAK");
-                    break;
-                }
-            }
-            minS+= "== "+b;
-            if(print) {
-                System.out.println(minS);
-            }
-            toReturn=temp;
-        }
-        if(print) {
-            System.out.println(t + "| val: b:" + b+" a:"+a);
-        }
-
-        return toReturn;
-    }
-
-     */
 
     public void setA(double a) {
         this.a = a;
@@ -97,84 +22,302 @@ public class MinMax {
     public void setC(double c) {
         this.c = c;
     }
+    public void setD(double d) {
+        this.d = d;
+    }
+    public void setE(double e){
+        this.e= e;
+    }
     // mutlipliers
     public static double a=1;
-    public static double b=0.5;
-    public static double c=5;
+    public static double b=0;
+    public static double c=0;
+    public static double d=0;
+    public static double e=0;
 
 
     boolean print=false;
     public static int counter=0;
 
-
     public Node alphaBeta(Node node, int depth, double a, double b, boolean bot){
         counter++;
         int t=counter;
         if(print) {
-            System.out.println(t + "| " + node.toString());
+            System.out.println("Depth: "+(Graph.actualMinMaxDepth-depth)+" | "+t + "| " + node.toString());
         }
         if(depth==0|| node.terminal){
             return node;
         }
-        Node toReturn=null;
-        ArrayList<ELine> availList = sortElines(node);
+        Node toReturn;
+        ArrayList<ELine> availList = new ArrayList<>();
+        if(node.dummyTurn==null) {
+            availList = sortElines(node);
+        }
         if(bot){
             a = -1000000;
-            String maxS = "MAX "+t+": ";
+            String maxS = "Depth: "+(Graph.actualMinMaxDepth-depth)+" MAX "+t+": ";
             Node temp=null;
-            for(ELine v: availList){
+            for (ELine v : availList) {
                 Node tem = node.performMove(v);
-                double toCompare = alphaBeta(tem,depth-1,a,b,tem.botTurn).evaluation();
-                maxS+= v.toString()+": "+toCompare+", ";
-                if(a<toCompare){
-                    a=toCompare;
-                    temp = tem;
+                tem.setParent(node);
+                tem.setDepth((Graph.actualMinMaxDepth-depth)+1);
+                Node toCompare = alphaBeta(tem, depth - 1, a, b, tem.botTurn);
+                double eval = toCompare.evaluation();
+                maxS += v.toString() + ": " +eval + ", ";
+                if (a < eval) {
+                    a = eval;
+                    temp = toCompare;
                 }
-                toReturn=temp;
-                a = Math.max(a,toCompare);
-                if(a>=b){
-                    if(print) {
+                a = Math.max(a, eval);
+                if (a >= b) {
+                    if (print) {
                         System.out.println(a + ">=" + b + " BREAK");
                     }
                     break;
                 }
             }
-            maxS+= "== "+a;
-            if(print) {
+            if((Graph.actualMinMaxDepth-depth)==0){
+                while(temp.depth!=1){
+                    temp=temp.parent;
+                }
+            }
+            toReturn=temp;
+            maxS += "== " + a;
+            if (print) {
                 System.out.println(maxS);
             }
         }else{
             b = 1000000;
-            String minS = "Min "+t+": ";
+            String minS = "Depth: "+(Graph.actualMinMaxDepth-depth)+" Min "+t+": ";
             Node temp=null;
-            for(ELine v: availList){
+            for (ELine v : availList) {
                 Node tem = node.performMove(v);
-                double toCompare =  alphaBeta(tem,depth-1,a,b,tem.botTurn).evaluation();
-                if(b>toCompare){
-                    b=toCompare;
-                    temp = tem;
-                }
-                minS+= v.toString()+": "+toCompare+", ";
-                b = Math.min(b,toCompare);
-                if(b<=a){
-                    if(print) {
+                tem.setParent(node);
+                tem.setDepth((actualMinMaxDepth-depth)+1);
+                Node toCompare = alphaBeta(tem, depth - 1, a, b, tem.botTurn);
+                double eval = toCompare.evaluation();
+                if (b > eval) {
+                    b = eval;
+                        temp = toCompare;
+                    }
+                minS += v.toString() + ": " + eval + ", ";
+                b = Math.min(b, eval);
+                if (b <= a) {
+                    if (print) {
                         System.out.println(b + "<=" + a + " BREAK");
                     }
                     break;
                 }
             }
-            minS+= "== "+b;
-            if(print) {
-                System.out.println(minS);
+            if((actualMinMaxDepth-depth)==0){
+                while(temp.depth!=1){
+                    temp=temp.parent;
+                }
             }
             toReturn=temp;
+            minS += "== " + b;
+            if (print) {
+                System.out.println(minS);
+            }
         }
         if(print) {
-            System.out.println(t + "| val: b:" + b+" a:"+a);
+            System.out.println("Depth: "+(actualMinMaxDepth-depth)+" | "+t + "| val: b:" + b+" a:"+a);
         }
-
+        if(toReturn==null||toReturn.move==null){
+            System.out.println(node.toString());
+        }
         return toReturn;
     }
+    /*
+    public Node alphaBeta(Node node, int depth, double a, double b, boolean bot){
+        counter++;
+        int t=counter;
+        if(print) {
+            System.out.println("Depth: "+(Graph.actualMinMaxDepth-depth)+" | "+t + "| " + node.toString());
+        }
+        if(depth==0|| node.terminal){
+            return node;
+        }
+        Node toReturn;
+        ArrayList<ELine> availList = new ArrayList<>();
+        if(node.dummyTurn==null) {
+            availList = sortElines(node);
+        }
+        if(bot){
+            a = -1000000;
+            String maxS = "Depth: "+(Graph.actualMinMaxDepth-depth)+" MAX "+t+": ";
+            Node temp=null;
+            if(node.dummyTurn!=null){
+                Node tem = node.dummyTurn;
+                tem.setParent(node);
+                tem.setDepth((Graph.actualMinMaxDepth-depth));
+                Node toCompare = alphaBeta(tem, depth-1, a, b, false);
+                double eval = toCompare.evaluation();
+               // System.out.println(toCompare);
+                maxS += tem.move.toString() + ": " + eval + ", ";
+                if (a < eval) {
+                    a = eval;
+                    temp = toCompare;
+                }
+                if((Graph.actualMinMaxDepth-depth)==0){
+                    System.out.println("TTTTTTTTTTTTTTTTT");
+                    System.out.println("1 temp depth: "+temp.depth);
+                    while(temp.depth!=1){
+                        temp=temp.parent;
+                        System.out.println("temp depth: "+temp.depth);
+                        if(temp.depth==1){
+                            System.out.println("TEMP: "+temp.toString());
+                        }
+                    }
+                }
+                toReturn = temp;
+                a = Math.max(a, eval);
+            }else {
+                for (ELine v : availList) {
+                    Node tem = node.performMove(v);
+                    tem.setParent(node);
+                    tem.setDepth((Graph.actualMinMaxDepth-depth));
+                    if (tem.bonusTurn) {
+                        Node dummy = new Node(tem);
+                        dummy.setParent(node);
+                        Node toCompare = alphaBeta(dummy, depth-1, a, b, false);
+                        double eval = toCompare.evaluation();
+                        maxS += v.toString() + ": " + eval + ", ";
+                        if (a < eval) {
+                            a = eval;
+                            temp = toCompare;
+                        }
+                        a = Math.max(a, eval);
+                    } else {
+                        Node toCompare = alphaBeta(tem, depth - 1, a, b, false);
+                        double eval = toCompare.evaluation();
+                        maxS += v.toString() + ": " +eval + ", ";
+                        System.out.println("To compare: "+toCompare.toString());
+                        System.out.println("eval: "+eval);
+                        System.out.println("a < eval: "+a +" < "+eval+" : "+ (a<eval));
+                        if (a < eval) {
+                            a = eval;
+                            temp = toCompare;
+                        }
+                        a = Math.max(a, eval);
+                    }
+                    if (a >= b) {
+                        if (print) {
+                            System.out.println(a + ">=" + b + " BREAK");
+                        }
+                        break;
+                    }
+                }
+                if((Graph.actualMinMaxDepth-depth)==0){
+                    System.out.println("TTTTTTTTTTTTTTTTT");
+                    System.out.println("PRE TEMP: "+temp.toString());
+                    System.out.println("2 temp depth: "+temp.depth);
+                    System.out.println(temp==null);
+                    while(temp.depth!=1){
+                        temp=temp.parent;
+                        System.out.println("temp depth: "+temp.depth);
+                        if(temp.depth==1){
+                            System.out.println("TEMP: "+temp.toString());
+                        }
+                    }
+                }
+                toReturn=temp;
+            }
+            maxS += "== " + a;
+            if (print) {
+                System.out.println(maxS);
+            }
+        }else{
+            b = 1000000;
+            String minS = "Depth: "+(Graph.actualMinMaxDepth-depth)+" Min "+t+": ";
+            Node temp=null;
+            if(node.dummyTurn!=null){
+                Node tem = node.dummyTurn;
+                tem.setParent(node);
+                tem.setDepth((Graph.actualMinMaxDepth-depth));
+                Node toCompare =  alphaBeta(tem,depth-1,a,b,true);
+                double eval = toCompare.evaluation();
+             //   System.out.println("2:"+toCompare);
+                if(b>eval){
+                    b=eval;
+                    temp = toCompare;
+                }
+                if((Graph.actualMinMaxDepth-depth)==0){
+                    System.out.println("TTTTTTTTTTTTTTTTT");
+                    System.out.println("3 temp depth: "+temp.depth);
+                    while(temp.depth!=1){
+                        temp=temp.parent;
+                        System.out.println("temp depth: "+temp.depth);
+                        if(temp.depth==1){
+                            System.out.println("TEMP: "+temp.toString());
+                        }
+                    }
+                }
+                toReturn=temp;
+                minS+= tem.move.toString()+": "+eval+", ";
+                b = Math.min(b,eval);
+            } else {
+                for (ELine v : availList) {
+                    Node tem = node.performMove(v);
+                    tem.setParent(node);
+                    tem.setDepth((actualMinMaxDepth-depth));
+                    if(tem.bonusTurn){
+                        Node dummy = new Node(tem);
+                        dummy.setParent(node);
+                        Node toCompare = alphaBeta(dummy, depth-1, a, b, true);
+                        double eval = toCompare.evaluation();
+                        if (b > eval) {
+                            b = eval;
+                            temp = toCompare;
+                        }
+                        minS += v.toString() + ": " + toCompare + ", ";
+                        b = Math.min(b, eval);
+                    }else {
+                        Node toCompare = alphaBeta(tem, depth - 1, a, b, true);
+                        double eval = toCompare.evaluation();
+                        if (b > eval) {
+                            b = eval;
+                            temp = toCompare;
+                        }
+                        minS += v.toString() + ": " + eval + ", ";
+                        b = Math.min(b, eval);
+                    }
+                    if (b <= a) {
+                        if (print) {
+                            System.out.println(b + "<=" + a + " BREAK");
+                        }
+                        break;
+                    }
+                }
+                if((actualMinMaxDepth-depth)==0){
+                    System.out.println("TTTTTTTTTTTTTTTTT");
+                    System.out.println("4 temp depth: "+temp.depth);
+                    while(temp.depth!=1){
+                        temp=temp.parent;
+                        System.out.println("temp depth: "+temp.depth);
+                        if(temp.depth==1){
+                            System.out.println("TEMP: "+temp.toString());
+                        }
+                    }
+                }
+                toReturn=temp;
+            }
+            minS += "== " + b;
+            if (print) {
+                System.out.println(minS);
+            }
+        }
+        if(print) {
+            System.out.println("Depth: "+(actualMinMaxDepth-depth)+" | "+t + "| val: b:" + b+" a:"+a);
+        }
+        if(toReturn==null||toReturn.move==null){
+            System.out.println(node.toString());
+        }
+        System.out.println("TO RETURN: "+toReturn.toString());
+        return toReturn;
+    }
+
+     */
 
 
     public ArrayList<ELine> sortElines(Node state){

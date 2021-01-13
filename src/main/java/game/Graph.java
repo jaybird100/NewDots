@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
-    public static boolean fin=false;
 
     public static boolean GASim=false;
 
@@ -25,9 +24,9 @@ public class Graph {
     public static int sims;
 
 
-
     static boolean bothMinMax=false;
-    public static int minMaxDepth = 5;
+    public static int minMaxDepth = 4;
+    public static int actualMinMaxDepth=minMaxDepth;
 
     static MinMax t = new MinMax();
 
@@ -47,7 +46,7 @@ public class Graph {
         Graph.gamesToPlay = gamesToPlay;
     }
 
-    static int gamesToPlay=200;
+    static int gamesToPlay=100;
     public static boolean isPlayerPlays() {
         return playerPlays;
     }

@@ -57,10 +57,13 @@ public class GameOver {
                 Graph.player1Score = 0;
                 Graph.player2Score = 0;
                 double score = GA.wins+((double)(GA.draws)*0.25);
-                double[] toget = new double[3];
+                double[] toget = new double[6];
                 toget[0]=GA.tempA;
                 toget[1]=GA.tempB;
-                toget[2]=score;
+                toget[2]=GA.tempC;
+                toget[3]=GA.tempD;
+                toget[4]=GA.tempE;
+                toget[5]=score;
                 GA.wins=0;
                 GA.draws=0;
                 GA.loses=0;

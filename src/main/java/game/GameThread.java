@@ -64,7 +64,7 @@ public class GameThread extends Thread{
                     if(minMaxCounter==1){
                         minMaxCounter++;
                     }else{
-                        minMaxCounter+=2;
+                        minMaxCounter+=5;
                     }
                     long start =System.nanoTime();
                     Node state;
@@ -74,10 +74,12 @@ public class GameThread extends Thread{
                         state = new Node(Node.matrixCopy(Graph.getMatrix()), Graph.getPlayer2Score(), Graph.getPlayer1Score(), Node.avCopy(Graph.getAvailableLines()), true, false, false, null);
                     }
                    // placeEdge(t.minMaxFunction(state,3,true).move);
-                    if(minMaxCounter<(Graph.getEdgeList().size()/5)||minMaxCounter<minMaxDepth){
+                    if(minMaxCounter<3){
                         //System.out.println("COUNTER: "+minMaxCounter);
+                        actualMinMaxDepth=minMaxCounter;
                         placeEdge(t.alphaBeta(state, minMaxCounter, -1000000, 1000000, true).move);
                     }else{
+                        actualMinMaxDepth=minMaxDepth;
                         placeEdge(t.alphaBeta(state, minMaxDepth, -1000000, 1000000, true).move);
                     }
                     MinMax.counter =0;
