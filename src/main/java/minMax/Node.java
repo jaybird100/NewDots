@@ -101,7 +101,7 @@ public class Node{
         }
 
         double c;
-        if(doubleCross()&&isLongerChainAvailable()){
+        if(doubleCross()&&checkFor3s().size()==0&&isLongerChainAvailable()){
             c=1;
         }else{
             c=0;

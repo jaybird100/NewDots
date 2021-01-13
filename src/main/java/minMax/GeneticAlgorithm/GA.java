@@ -26,7 +26,7 @@ public class GA {
     public static int draws;
     public static int loses;
 
-    public static int simulations = 50;
+    public static int simulations = 25;
     static double aRange=0.5;
     static double bRange=0.5;
     static double cRange=1;
