@@ -30,13 +30,13 @@ public class MinMax {
     }
     // mutlipliers
     public static double a=1;
-    public static double b=0.05;
-    public static double c=-0.25;
+    public static double b=0;
+    public static double c=-2.5;
     public static double d=0.5;
     public static double e=1;
 
 
-    boolean print=false;
+    boolean print=true;
     public static int counter=0;
 
     public Node alphaBeta(Node node, int depth, double a, double b, boolean bot){
@@ -125,6 +125,7 @@ public class MinMax {
         }
         if(toReturn==null||toReturn.move==null){
             System.out.println(node.toString());
+            System.out.println("a: "+a+" b: "+b+" c: "+c+" d: "+d+" e: "+e);
         }
         return toReturn;
     }

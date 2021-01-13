@@ -56,8 +56,6 @@ public class Node{
 
         return toReturn;
     }
-    
-
     double evaluation(){
         double a = botScore-oScore;
 
@@ -80,7 +78,7 @@ public class Node{
                 }
             }
         }
-        int numberOfLongChains = numberOfLongChains();
+        int numberOfLongChains = numberOfLongChains()-numberOfLongLoops();
         double d;
         if(numberOfLongChains==0){
             d=0;
@@ -101,7 +99,7 @@ public class Node{
         }
 
         double c;
-        if(bonusTurn&&doubleCross()){
+        if(doubleCross()&&isLongerChainAvailable()){
             c=1;
         }else{
             c=0;
@@ -128,9 +126,74 @@ public class Node{
         double e1= MinMax.e;
         double v = a1 * a + b1 * b + c1 * c+ d1*d+ e1*e;
         return v;
-
-
     }
+    public boolean isLongerChainAvailable(){
+        // double cross: if there's a longer chain available;
+        matrix=parent.matrix;
+        visited= new ArrayList<>();
+        for(int i=0;i<Graph.getHeight()-1;i++){
+            ArrayList<Boolean> row = new ArrayList<>();
+            for(int w=0;w<Graph.getWidth()-1;w++){
+                row.add(false);
+            }
+            visited.add(row);
+        }
+        if(!move.isHorizontal()){
+            visited.get(move.vertices.get(0).id/Graph.getWidth()).set(move.vertices.get(0).id%Graph.getWidth(),true);
+            visited.get((move.vertices.get(0).id-1)/Graph.getWidth()).set((move.vertices.get(0).id-1)%Graph.getWidth(),true);
+        }else{
+            visited.get(move.vertices.get(0).id/Graph.getWidth()).set(move.vertices.get(0).id%Graph.getWidth(),true);
+            visited.get((move.vertices.get(0).id-Graph.getWidth())/Graph.getWidth()).set((move.vertices.get(0).id-Graph.getWidth())%Graph.getWidth(),true);
+        }
+        for(int i=0;i<Graph.getHeight()-1;i++) {
+            for (int w = 0; w < Graph.getWidth() - 1; w++) {
+                if (!visited.get(i).get(w)) {
+                    int top = matrix[(i * Graph.getWidth()) + w][(i * Graph.getWidth()) + w + 1];
+                    int left = matrix[(i * Graph.getWidth()) + w][((i + 1) * Graph.getWidth()) + w];
+                    int right = matrix[(i * Graph.getWidth()) + w + 1][((i + 1) * Graph.getWidth()) + w + 1];
+                    int bottom = matrix[((i + 1) * Graph.getWidth()) + w][((i + 1) * Graph.getWidth()) + w + 1];
+                    //sideways
+                    if (top == 2 && bottom == 2 && left == 1 && right == 1) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.sideways, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                    //bottomleft
+                    if (left == 2 && bottom == 2 && right == 1 && top == 1) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.bottomleft, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                    //topleft
+                    if (top == 2 && left == 2 && bottom == 1 && right == 1) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.topleft, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                    //bottomright
+                    if (left == 1 && bottom == 2 && right == 2 && top == 1) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.bottomright, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                    //topright
+                    if (top == 2 && left == 1 && bottom == 1 && right == 2) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.topright, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                    //longways
+                    if (top == 1 && bottom == 1 && left == 2 && right == 2) {
+                        if (countNumBoxesInChain(i, w, 1, boxType.longways, visited) >= 3) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean doubleCross(){
         ArrayList<ArrayList<Vertex>> temp = checkBox(move,matrix);
         if(temp!=null&&temp.size()>1){
@@ -407,6 +470,64 @@ public class Node{
         return 4;
     }
     static ArrayList<ArrayList<Integer>> loopVisited;
+    public int numberOfLongLoops(){
+        loopVisited= new ArrayList<>();
+        for(int i=0;i<Graph.getHeight()-1;i++){
+            ArrayList<Integer> row = new ArrayList<>();
+            for(int w=0;w<Graph.getWidth()-1;w++){
+                row.add(0);
+            }
+            loopVisited.add(row);
+        }
+        int count=0;
+        for(int i=0;i<Graph.getHeight()-1;i++){
+            for(int w=0;w<Graph.getWidth()-1;w++){
+                if(loopVisited.get(i).get(w)==0){
+                    int top = matrix[(i*Graph.getWidth())+w][(i*Graph.getWidth())+w+1];
+                    int left = matrix[(i*Graph.getWidth())+w][((i+1)*Graph.getWidth())+w];
+                    int right = matrix[(i*Graph.getWidth())+w+1][((i+1)*Graph.getWidth())+w+1];
+                    int bottom = matrix[((i+1)*Graph.getWidth())+w][((i+1)*Graph.getWidth())+w+1];
+                    //sideways
+                    if(top==2&&bottom==2&&left==1&&right==1){
+                        if(countNumBoxesInLoop(i,w,1,boxType.sideways,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                    //bottomleft
+                    if(left==2&&bottom==2&&right==1&&top==1){
+                        if(countNumBoxesInLoop(i,w,1,boxType.bottomleft,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                    //topleft
+                    if(top==2&&left==2&&bottom==1&&right==1){
+                        if(countNumBoxesInLoop(i,w,1,boxType.topleft,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                    //bottomright
+                    if(left==1&&bottom==2&&right==2&&top==1){
+                        if(countNumBoxesInLoop(i,w,1,boxType.bottomright,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                    //topright
+                    if(top==2&&left==1&&bottom==1&&right==2){
+                        if(countNumBoxesInLoop(i,w,1,boxType.topright,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                    //longways
+                    if (top == 1 && bottom == 1 && left == 2 && right == 2) {
+                        if(countNumBoxesInLoop(i,w,1,boxType.longways,loopVisited,true)>=3){
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
     public int numberOfLoops(){
         loopVisited= new ArrayList<>();
         for(int i=0;i<Graph.getHeight()-1;i++){

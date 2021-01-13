@@ -11,7 +11,7 @@ public class GA {
     static int iterations = 10;
 
     public static void main(String[] args) throws IOException {
-        GA temp = new GA(1,0.05,-0.25,0.5,1);
+        GA temp = new GA(1,0,-2.5,0.5,1);
         temp.createBots();
     }
     public static int  number=10;
@@ -26,7 +26,7 @@ public class GA {
     public static int draws;
     public static int loses;
 
-    public static int simulations = 30;
+    public static int simulations = 50;
     static double aRange=0.5;
     static double bRange=0.5;
     static double cRange=1;
@@ -86,16 +86,16 @@ public class GA {
                 } else {
                     if (Math.random() < 0.8) {
                         if (a < 0) {
-                            tempA = -1 * Math.abs(topValues.get(id)[0] + (Math.random() * aRange - (aRange / 2)));
+                            tempA = -1 * Math.abs(topValues.get(id)[0] + ((int)(Math.random()*8-4)*(aRange/4)));
                         } else {
                             if(a==0){
-                                tempA=topValues.get(id)[0] + (Math.random() * aRange - (aRange / 2));
+                                tempA=topValues.get(id)[0] + ((int)(Math.random()*8-4)*(aRange/4));
                             }else {
-                                tempA = Math.abs(topValues.get(id)[0] + (Math.random() * aRange - (aRange / 2)));
+                                tempA = Math.abs(topValues.get(id)[0] + ((int)(Math.random()*8-4)*(aRange/4)));
                             }
                         }
                     } else {
-                        tempA = topValues.get(id)[0] + (Math.random() * aRange - (aRange / 2));
+                        tempA = topValues.get(id)[0] + ((int)(Math.random()*8-4)*(aRange/4));
                     }
                 }
                 if ((topValues.get(id)[1] == 0&&Math.random()<0.85) || Math.random() < 0.15) {
@@ -103,16 +103,16 @@ public class GA {
                 } else {
                     if (Math.random() < 0.8) {
                         if (b < 0) {
-                            tempB = -1 * Math.abs(topValues.get(id)[1] + (Math.random() * bRange - (bRange / 2)));
+                            tempB = -1 * Math.abs(topValues.get(id)[1] + ((int)(Math.random()*8-4)*(bRange/4)));
                         } else {
                             if(b==0){
-                                tempB=topValues.get(id)[1] + (Math.random() * bRange - (bRange / 2));
+                                tempB=topValues.get(id)[1] + ((int)(Math.random()*8-4)*(bRange/4));
                             }else {
-                                tempB = Math.abs(topValues.get(id)[1] + (Math.random() * bRange - (bRange / 2)));
+                                tempB = Math.abs(topValues.get(id)[1] + ((int)(Math.random()*8-4)*(bRange/4)));
                             }
                         }
                     } else {
-                        tempB = topValues.get(id)[1] + (Math.random() * bRange - (bRange / 2));
+                        tempB = topValues.get(id)[1] + ((int)(Math.random()*8-4)*(bRange/4));
                     }
                 }
                 if ((topValues.get(id)[2] == 0 &&Math.random()<0.85)|| Math.random() < 0.2) {
@@ -120,15 +120,15 @@ public class GA {
                 } else {
                     if (Math.random() < 0.8) {
                         if (b < 0) {
-                            tempC = -1 * Math.abs(topValues.get(id)[2] + (Math.random() * cRange - (bRange / 2)));
+                            tempC = -1 * Math.abs(topValues.get(id)[2] + ((int)(Math.random()*8-4)*(cRange/4)));
                         } else {
                             if(c==0){
-                                tempC=topValues.get(id)[2] + (Math.random() * cRange - (cRange / 2));
+                                tempC=topValues.get(id)[2] + ((int)(Math.random()*8-4)*(cRange/4));
                             }else {
-                                tempC = Math.abs(topValues.get(id)[2] + (Math.random() * cRange - (cRange / 2)));
+                                tempC = Math.abs(topValues.get(id)[2] + ((int)(Math.random()*8-4)*(cRange/4)));
                             }                        }
                     } else {
-                        tempC = topValues.get(id)[2] + (Math.random() * cRange - (cRange / 2));
+                        tempC = topValues.get(id)[2] + ((int)(Math.random()*8-4)*(cRange/4));
                     }
                 }
                 if ((topValues.get(id)[3] == 0&&Math.random()<0.85) || Math.random() < 0.15) {
@@ -136,15 +136,15 @@ public class GA {
                 } else {
                     if (Math.random() < 0.8) {
                         if (d < 0) {
-                            tempD = -1 * Math.abs(topValues.get(id)[3] + (Math.random() * dRange - (dRange / 2)));
+                            tempD = -1 * Math.abs(topValues.get(id)[3] + ((int)(Math.random()*8-4)*(dRange/4)));
                         } else {
                             if(d==0){
-                                tempD=topValues.get(id)[3] + (Math.random() * dRange - (dRange / 2));
+                                tempD=topValues.get(id)[3] + ((int)(Math.random()*8-4)*(dRange/4));
                             }else {
-                                tempD = Math.abs(topValues.get(id)[3] + (Math.random() * dRange - (dRange / 2)));
+                                tempD = Math.abs(topValues.get(id)[3] + ((int)(Math.random()*8-4)*(dRange/4)));
                             }                        }
                     } else {
-                        tempD = topValues.get(id)[3] + (Math.random() * dRange - (dRange / 2));
+                        tempD = topValues.get(id)[3] + ((int)(Math.random()*8-4)*(dRange/4));
                     }
                 }
                 if ((topValues.get(id)[4] == 0&&Math.random()<0.85) || Math.random() < 0.2) {
@@ -152,15 +152,15 @@ public class GA {
                 } else {
                     if (Math.random() < 0.8) {
                         if (e < 0) {
-                            tempE = -1 * Math.abs(topValues.get(id)[4] + (Math.random() * eRange - (eRange / 2)));
+                            tempE = -1 * Math.abs(topValues.get(id)[4] + ((int)(Math.random()*8-4)*(eRange/4)));
                         } else {
                             if(e==0){
-                                tempE=topValues.get(id)[4] + (Math.random() * eRange - (eRange / 2));
+                                tempE=topValues.get(id)[4] + ((int)(Math.random()*8-4)*(eRange/4));
                             }else {
-                                tempE = Math.abs(topValues.get(id)[4] + (Math.random() * eRange - (eRange / 2)));
+                                tempE = Math.abs(topValues.get(id)[4] + ((int)(Math.random()*8-4)*(eRange/4)));
                             }                        }
                     } else {
-                        tempE = topValues.get(id)[4] + (Math.random() * eRange - (eRange / 2));
+                        tempE = topValues.get(id)[4] + ((int)(Math.random()*8-4)*(eRange/4));
                     }
                 }
             }
@@ -231,11 +231,13 @@ public class GA {
                             zerocount++;
                         }
                         if(y!=i&&((values.get(y)[0]==a&&values.get(y)[1]==b&&values.get(y)[2]==c&&values.get(y)[3]==d&&values.get(y)[4]==e)||(zerocount==iZeroCount&&zerocount==4&&(values.get(y)[0]!=0)))){
+                          //  System.out.println(Arrays.toString(values.get(y))+" == "+Arrays.toString(values.get(i)));
                             indexes.add(y);
                             counter++;
                             score+=values.get(y)[5];
                         }
                     }
+                   // System.out.println("score/counter ="+score/counter);
                     for(Integer q:indexes){
                         values.get(q)[5]=score/counter;
                     }

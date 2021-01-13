@@ -25,7 +25,7 @@ public class Graph {
 
 
     static boolean bothMinMax=false;
-    public static int minMaxDepth = 5;
+    public static int minMaxDepth = 7;
     public static int actualMinMaxDepth=minMaxDepth;
 
     static MinMax t = new MinMax();
@@ -46,7 +46,7 @@ public class Graph {
         Graph.gamesToPlay = gamesToPlay;
     }
 
-    static int gamesToPlay=100;
+    static int gamesToPlay=20;
     public static boolean isPlayerPlays() {
         return playerPlays;
     }
@@ -91,7 +91,7 @@ public class Graph {
         return sleep;
     }
 
-    private static int sleep = 0;
+    private static int sleep = 1;
 
     public static void setAllWaysReplay(boolean allWaysReplay) {
         Graph.allWaysReplay = allWaysReplay;
@@ -105,7 +105,7 @@ public class Graph {
         Graph.randBotPlayer1 = randBotPlayer1;
     }
 
-    static boolean allWaysReplay=true;
+    static boolean allWaysReplay=false;
     //Make sure to use the variables bellow in order for everything to work with the GUI
     //DeepQ boolean
     private static boolean neuralOn=false;
